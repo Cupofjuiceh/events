@@ -1,0 +1,12 @@
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url:
+      123123123
+    username:
+      123123
+    password:
+      1231231
