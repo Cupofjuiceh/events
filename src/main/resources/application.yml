@@ -4,9 +4,19 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url:
-      123123123
-    username:
-      123123
-    password:
-      1231231
+    url: jdbc:postgresql://events-postgis:5432/events_demo
+    username: events_demo
+    password: randomPass321
+  liquibase:
+    change-log: classpath:db/liquibase-changelog.xml
+  kafka:
+    producer:
+      client-id: events-web
+      bootstrap-servers: events-kafka:9092
+    email:
+      verification-code-topic: events-email-verification
+
+events:
+  app:
+    jwtSecret: SomeSeriousSecretKey
+    jwtExpiration: 86400

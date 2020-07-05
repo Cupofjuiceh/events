@@ -1,0 +1,75 @@
+version: '3.2'
+
+services:
+  events-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: events-web
+    ports:
+    - 8082:8080
+    - 5050:5050
+    networks:
+    - net-events
+    depends_on:
+    - events-kafka
+    - events-postgis
+    restart: always
+
+  events-email-sender:
+    build:
+      context: ../events-email-sender
+      dockerfile: Dockerfile
+    image: events-email-sender
+    ports:
+    - 8083:8081
+    networks:
+    - net-events
+    depends_on:
+    - events-kafka
+    - events-postgis
+    restart: always
+
+  events-postgis:
+    image: kartoza/postgis
+    container_name: events-postgis
+    ports:
+    - 5434:5432
+    networks:
+    - net-events
+    environment:
+      POSTGRES_DBNAME: events_demo
+      POSTGRES_USER: events_demo
+      POSTGRES_PASS: randomPass321
+    
+  events-zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+    - 2181:2181
+    networks:
+    - net-events
+    container_name: events-zookeeper
+    
+  events-kafka:
+    image: wurstmeister/kafka
+    container_name: events-kafka
+    ports:
+    - 9092:9092
+    networks:
+    - net-events
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: events-kafka
+      KAFKA_ADVERTISED_PORT: "9092"
+      KAFKA_ZOOKEEPER_CONNECT: events-zookeeper:2181
+      KAFKA_HEAP_OPTS: -Xmx512M -Xms512M
+      KAFKA_CREATE_TOPICS: "password-recovery:1:1:delete, email-verification-code:1:1:delete"
+    depends_on:
+    - events-zookeeper
+    restart: always
+
+volumes:
+  psqldata:
+
+networks:
+  net-events:
+    driver: bridge

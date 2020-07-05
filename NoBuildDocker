@@ -1,0 +1,9 @@
+FROM java:8
+
+ADD ./event.jar /opt/
+
+ENV JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n
+
+ENTRYPOINT ["java","-jar","/opt/event.jar"]
+
+EXPOSE 8080

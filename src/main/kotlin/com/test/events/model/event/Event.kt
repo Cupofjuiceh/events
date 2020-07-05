@@ -14,27 +14,25 @@ data class Event(
         var id: Long = 0,
 
         @Column(name = "title")
-        val title: String = "",
+        var title: String = "",
 
         @Column(name = "category")
-        val category: String = "",
+        var category: String = "",
 
         @Column(name = "description")
-        val description: String = "",
+        var description: String = "",
 
         @ManyToOne(fetch = FetchType.LAZY)
         @JoinColumn(name = "user_id")
-        val author: User? = null,
+        var author: User? = null,
 
         @ManyToMany(fetch = FetchType.EAGER)
-        val users: Set<User>? = mutableSetOf(),
+        var users: Set<User>? = mutableSetOf(),
 
         @Temporal(TemporalType.TIMESTAMP)
-        val date: Date? = null,
+        var date: Date? = null,
 
-        val lat: Double = 0.0,
-        val lng: Double = 0.0,
-
-        val filename: String = ""
+        var lat: Double = 0.0,
+        var lng: Double = 0.0
 
 )
